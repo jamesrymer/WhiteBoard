@@ -12,7 +12,7 @@ public class Canvas extends JPanel {
 	private DShape selected;
 
 	public Canvas() {
-		this.setBounds(10, 10, 400, 400);
+		this.setBounds(10, 10, 200, 200);
 		this.setBackground(Color.WHITE);
 		shapes = new ArrayList<>();
 		final MouseAdapter mouseAdapter = new MouseAdapter() {

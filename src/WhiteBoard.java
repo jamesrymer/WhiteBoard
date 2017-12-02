@@ -36,15 +36,15 @@ public class WhiteBoard extends JFrame {
 
 				Random rand = new Random();
 
-				DRectModel rectModel = new DRectModel(10,10,40,40,Color.GRAY);//rand.nextInt(400), rand.nextInt(400), rand.nextInt(400),
-						//rand.nextInt(400), Color.GRAY);
+				DRectModel rectModel = new DRectModel(10,10,40,40,Color.GRAY);//rand.nextInt(400), rand.nextInt(400), rand.nextInt(400),rand.nextInt(400), Color.GRAY);
 				DRect dr = new DRect();
 				dr.shapeModel = rectModel;
-				// dr.setAll(rectModel.getX(), rectModel.getY(), rectModel.getWidth(),
-				// rectModel.getHeight(), rectModel.getColor());
+//				 dr.setAll(rectModel.getX(), rectModel.getY(), rectModel.getWidth(),
+//				 rectModel.getHeight(), rectModel.getColor());
 				canvas.addShape(dr);
 			}
 		});
+		
 		JButton oval = new JButton("oval");
 		oval.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -59,6 +59,7 @@ public class WhiteBoard extends JFrame {
 
 			}
 		});
+		
 		JButton line = new JButton("line");
 		line.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
