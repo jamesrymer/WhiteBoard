@@ -49,7 +49,7 @@ public class WhiteBoard extends JFrame {
 		oval.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Random rand = new Random();
-				DOvalModel ovalModel = new DOvalModel(10,10,20,20,Color.GRAY);//rand.nextInt(400), rand.nextInt(400), rand.nextInt(400),
+				DOvalModel ovalModel = new DOvalModel(10,10,60,20,Color.GRAY);//rand.nextInt(400), rand.nextInt(400), rand.nextInt(400),
 						//rand.nextInt(400), Color.GRAY);
 				DOval dov = new DOval();
 				dov.shapeModel = ovalModel;
@@ -60,13 +60,22 @@ public class WhiteBoard extends JFrame {
 			}
 		});
 		
-		JButton line = new JButton("line");
+		JButton line = new JButton("Line");
 		line.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 
+				Random rand = new Random();
+
+				DLineModel rectModel = new DLineModel(10,10,100,100,Color.GRAY);//rand.nextInt(400), rand.nextInt(400), rand.nextInt(400),rand.nextInt(400), Color.GRAY);
+				DLine dl = new DLine();
+				dl.shapeModel = rectModel;
+//				 dr.setAll(rectModel.getX(), rectModel.getY(), rectModel.getWidth(),
+//				 rectModel.getHeight(), rectModel.getColor());
+				canvas.addShape(dl);
 			}
 		});
+		
+		
 
 		JButton text = new JButton("text");
 
@@ -85,8 +94,38 @@ public class WhiteBoard extends JFrame {
 		// Color.GRAY));
 		// }
 		// });
-		JPanel content = new JPanel();
+		
+		JButton delete = new JButton("delete");
+		
+		delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canvas.delete();
 
+			}
+		});
+		
+		JButton moveToFront = new JButton("Move To Front");
+		
+		moveToFront.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canvas.MoveToFront();
+
+			}
+		});
+		
+		JButton moveToBack = new JButton("Move To Back");
+		
+		moveToBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canvas.MoveToBack();
+
+			}
+		});
+		
+		JPanel content = new JPanel();
+		content.add(moveToFront);
+		content.add(moveToBack);
+		content.add(delete);
 		content.add(line);
 		content.add(text);
 		content.add(rect);

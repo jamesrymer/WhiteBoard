@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-public class Canvas extends JPanel {
+public class Canvas extends JPanel implements ModelListener {
 	private ArrayList<DShape> shapes;
 	private DShape selected;
 
@@ -70,5 +70,38 @@ public class Canvas extends JPanel {
 
 	public DShape getSelected() {
 		return selected;
+	}
+
+	@Override
+	public void ModelChanged(DShapeModel model) {
+		// TODO Auto-generated method stub
+		selected.shapeModel = model;
+		this.repaint();
+		
+	}
+
+	public void delete() {
+		for (DShape shape : shapes) {
+			if(shape == selected) {
+				shapes.remove(shape);
+				this.repaint();
+			}
+			
+		}
+		
+	}
+
+	public void MoveToFront() {
+		shapes.add(selected);
+		shapes.remove(selected);
+		this.repaint();
+		
+	}
+
+	public void MoveToBack() {
+		shapes.remove(selected);
+		shapes.add(0, selected);
+		this.repaint();
+		
 	}
 }

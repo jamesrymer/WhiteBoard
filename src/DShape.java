@@ -3,7 +3,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
-public class DShape {
+public class DShape implements ModelListener {
 	DShapeModel shapeModel;
 	
 	public DShape() {
@@ -52,5 +52,11 @@ public class DShape {
 		knobs.add(new Rectangle(getX()+getWidth()-9,getY()-9,20,20)); //Top Right
 		knobs.add(new Rectangle(getX()+getWidth()-9,getY()+getHeight()-9,20,20)); //Bottom Right
 		return knobs;
+	}
+
+	@Override
+	public void ModelChanged(DShapeModel model) {
+		this.shapeModel = model;
+		
 	}
 }
