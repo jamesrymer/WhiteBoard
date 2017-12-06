@@ -45,6 +45,9 @@ public class DShape implements ModelListener {
 	public int getHeight() {
 		return  shapeModel.getHeight();
 	}
+	public DShapeModel getDShapeModel() {
+		return shapeModel;
+	}
 	public ArrayList<Rectangle> getKnobs() {
 		ArrayList<Rectangle> knobs = new ArrayList<Rectangle>();
 		knobs.add(new Rectangle(getX()-9,getY()-9,20,20)); //Top Left

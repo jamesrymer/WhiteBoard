@@ -122,7 +122,17 @@ public class WhiteBoard extends JFrame {
 			}
 		});
 		
+		JButton addX = new JButton("addX");
+		
+		addX.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canvas.addX();
+
+			}
+		});
+		
 		JPanel content = new JPanel();
+		content.add(addX);
 		content.add(moveToFront);
 		content.add(moveToBack);
 		content.add(delete);
