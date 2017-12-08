@@ -10,6 +10,8 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.TableColumn;
 
 public class WhiteBoard extends JFrame {
 
@@ -22,6 +24,7 @@ public class WhiteBoard extends JFrame {
 	}
 
 	public WhiteBoard() {
+		JTable table = new JTable();
 		canvas = new Canvas();
 
 		this.setBounds(100, 100, 800, 400);
@@ -47,6 +50,7 @@ public class WhiteBoard extends JFrame {
 				dr.shapeModel = rectModel;
 //				 dr.setAll(rectModel.getX(), rectModel.getY(), rectModel.getWidth(),
 //				 rectModel.getHeight(), rectModel.getColor());
+				//table.add
 				canvas.addShape(dr);
 			}
 		});
@@ -147,13 +151,18 @@ public class WhiteBoard extends JFrame {
 		content.add(rect);
 		// this.add(rect);
 		content.add(oval);
+		this.add(content);
 		// content.add(colorChooser);
 		/////////////////////////////////////////////////////////////
 		//////////////BUTONS FOR MANIPULATING SHAPES/////////////////
 		/////////////////////////////////////////////////////////////
+		String columnNames[] = { "Shape", "X", "Y","Row", "columb", "Color"};
+		TableColumn t = new TableColumn();
 		
+//		JTable table = new JTable();
+//		table.addColumn(columnNames);
 		// content.setLayout(m);
-		this.add(content);
+		
 
 	};
 
