@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -8,12 +9,15 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
+
 /*
  * Used for displaying shapes
  */
 public class Canvas extends JPanel implements ModelListener {
-	private ArrayList<DShape> shapes; //Holds shapes
-	private DShape selected; //Holds the selected shape
+	private ArrayList<DShape> shapes; // Holds shapes
+	private DShape selected; // Holds the selected shape
+	private volatile int draggedAtX, draggedAtY;
+
 	/*
 	 * Constructor: initializes canvas display size and adds a few mouse listeners.
 	 */
@@ -27,8 +31,40 @@ public class Canvas extends JPanel implements ModelListener {
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
-				moveSelected(e.getX(), e.getY());
+				Point moving;
+				Point anchor;
+				int knob = -1;
+				
+					if(selected instanceof DLine) {
+						
+					}
+					else {
+					
+					for(Rectangle rectangle : selected.getKnobs()) {
+						if(rectangle.contains(e.getPoint())) {
+							knob = selected.getKnobs().indexOf(rectangle);
+						}
+					}
+					
+					if(knob == 3) //Bottom Right
+					{
+						anchor = selected.getKnobs().get(0).getLocation();
+						selected.setWidth(selected.getWidth() + e.getX() - draggedAtX);
+						selected.setHeight(selected.getHeight() +  e.getY() - draggedAtY);
+						
+					}
+					
+					else if (e.getX() >= selected.getX() && e.getX() <= selected.getX() + selected.getWidth() && e.getY() >= selected.getY()
+							&& e.getY() <= selected.getY() + selected.getHeight()) {
+						moveSelected(e.getX() - draggedAtX + selected.getX(),
+		                        e.getY() - draggedAtY + selected.getY());
+
+					}
+					
+					
+					}
+					//System.out.println(e.getX());
+				
 				
 			}
 
@@ -46,6 +82,8 @@ public class Canvas extends JPanel implements ModelListener {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				// point = e.getPoint();
+				draggedAtX = e.getX();
+                draggedAtY = e.getY();
 				if(selected != null) {
 					selected.setColor(Color.gray);
 				}
@@ -63,10 +101,15 @@ public class Canvas extends JPanel implements ModelListener {
 		this.addMouseListener(mouseAdapter);
 		
 	}
-	
-	public void moveSelected(int x, int y) { //Will be used to move shape.
-		
+
+	public void moveSelected(int x, int y) { // Will be used to move shape.
+		selected.setX(x - selected.getX());
+		selected.setY(y - selected.getY());
+		this.repaint();
+		System.out.println(selected.getX() + " " + x + "::::::" + selected.getY() + "  " + y);
+
 	}
+
 	/*
 	 * Adds a shape to the list then calls repaint to display it on the canvas.
 	 */
@@ -75,8 +118,10 @@ public class Canvas extends JPanel implements ModelListener {
 		this.shapes.add(shape);
 		this.repaint();
 	}
+
 	/*
-	 * Tells shapes to draw themselves. If shape is selected, draws knobs on each corner which will be used for resizing.
+	 * Tells shapes to draw themselves. If shape is selected, draws knobs on each
+	 * corner which will be used for resizing.
 	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -91,12 +136,14 @@ public class Canvas extends JPanel implements ModelListener {
 			}
 		}
 	}
+
 	/*
 	 * Sets selected shape;
 	 */
 	public void setSelected(DShape shape) {
 		this.selected = shape;
 	}
+
 	/*
 	 * Sets selected shape;
 	 */
@@ -110,9 +157,9 @@ public class Canvas extends JPanel implements ModelListener {
 			System.out.println(selected.getX());
 		}
 		selected.setColor(Color.MAGENTA);
-		
-		
+
 	}
+
 	/*
 	 * Returns selected shape;
 	 */
@@ -121,48 +168,53 @@ public class Canvas extends JPanel implements ModelListener {
 	}
 
 	/*
-	 * Its complicated... 
+	 * Its complicated...
 	 */
 	@Override
 	public void ModelChanged(DShapeModel model) {
 		// TODO Auto-generated method stub
 		selected.shapeModel = model;
 		this.repaint();
-		
+
 	}
-	
+
 	/*
 	 * Deletes selected shape;
 	 */
 	public void delete() {
 		for (DShape shape : shapes) {
-			if(shape == selected) {
+			if (shape == selected) {
 				shapes.remove(shape);
 				this.repaint();
 			}
-			
+
 		}
-		
+
 	}
+
 	/*
-	 * Sets selected shape to the front most position (The last element of the array);
+	 * Sets selected shape to the front most position (The last element of the
+	 * array);
 	 */
 	public void MoveToFront() {
 		shapes.add(selected);
 		shapes.remove(selected);
 		this.repaint();
-		
+
 	}
+
 	/*
-	 * Sets selected shape to the back most position (The first element of the array);
+	 * Sets selected shape to the back most position (The first element of the
+	 * array);
 	 */
 	public void MoveToBack() {
 		shapes.remove(selected);
 		shapes.add(0, selected);
-		
+
 		this.repaint();
-		
+
 	}
+
 	/*
 	 * Used for testing
 	 */
@@ -170,7 +222,7 @@ public class Canvas extends JPanel implements ModelListener {
 		System.out.println(selected.getX());
 		selected.setX(selected.getX() + 50);
 		System.out.println(selected.getX());
-		//this.repaint();
-		
+		// this.repaint();
+
 	}
 }

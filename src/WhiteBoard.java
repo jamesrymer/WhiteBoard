@@ -30,6 +30,12 @@ public class WhiteBoard extends JFrame {
 		// this.setLayout(flowLayout);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.add(canvas);
+		
+		
+		/////////////////////////////////////////////////////////////
+		//////////////BUTONS FOR MANIPULATING SHAPES/////////////////
+		/////////////////////////////////////////////////////////////
+		
 		JButton rect = new JButton("rect");
 		rect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -142,7 +148,10 @@ public class WhiteBoard extends JFrame {
 		// this.add(rect);
 		content.add(oval);
 		// content.add(colorChooser);
-
+		/////////////////////////////////////////////////////////////
+		//////////////BUTONS FOR MANIPULATING SHAPES/////////////////
+		/////////////////////////////////////////////////////////////
+		
 		// content.setLayout(m);
 		this.add(content);
 
