@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
@@ -7,7 +8,11 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
+import javax.swing.Icon;
+import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.Popup;
 /*
  * Used for displaying shapes
  */
@@ -29,11 +34,7 @@ public class Canvas extends JPanel implements ModelListener {
 			public void mouseDragged(MouseEvent e) {
 				// TODO Auto-generated method stub
 				moveSelected(e.getX(), e.getY());
-				
 			}
-
-			
-
 			@Override
 			public void mouseMoved(MouseEvent e) {
 				// TODO Auto-generated method stub
@@ -162,6 +163,36 @@ public class Canvas extends JPanel implements ModelListener {
 		
 		this.repaint();
 		
+	}
+	//SAVING AND LOADING FEATURE METHODS
+	//button for saving
+	public void save() {
+		System.out.println("the save button has been pressed...");
+		//JMenu menu = new JMenu("Save As");
+		//Object[] possibilities = {null};
+		Component frame = null;
+		Icon icon = null;
+		String s = (String)JOptionPane.showInputDialog(
+		                    frame,
+		                    "Enter Filename:\n",
+		                    "Customized Dialog",
+		                    JOptionPane.PLAIN_MESSAGE,
+		                    icon,
+		                    null,
+		                    "WhiteBoard");
+
+		//If a string was returned, say so.
+		if ((s != null) && (s.length() > 0)) {
+		    System.out.println("Green eggs and... " + s + "!");
+		    return;
+		}
+
+		//If you're here, the return value was null/empty.
+		System.out.println("Come on, finish the sentence!");
+	}
+	
+	public void open() {
+		System.out.println("the open button has been pressed...");
 	}
 	/*
 	 * Used for testing

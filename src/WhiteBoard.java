@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +19,6 @@ public class WhiteBoard extends JFrame {
 	public static void main(String[] args) {
 		WhiteBoard frame = new WhiteBoard();
 		frame.setVisible(true);
-
 	}
 
 	public WhiteBoard() {
@@ -131,6 +131,9 @@ public class WhiteBoard extends JFrame {
 			}
 		});
 		
+		JButton save = new JButton("Save");
+		JButton open = new JButton("Open");
+		
 		JPanel content = new JPanel();
 		content.add(addX);
 		content.add(moveToFront);
@@ -142,9 +145,33 @@ public class WhiteBoard extends JFrame {
 		// this.add(rect);
 		content.add(oval);
 		// content.add(colorChooser);
+		
+		//stuff for save and open
+		content.add(save);
+		content.add(open);
+		save.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canvas.save();
 
+			}
+		});
+		
+		content.add(open);
+		open.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canvas.open();
+
+			}
+		});
+		
 		// content.setLayout(m);
 		this.add(content);
+		/*
+		for (JButton comp : content.getComponent(i)) {
+			((JButton)comp).setAlignmentX(this.LEFT_ALIGNMENT);
+			}
+		*/
+	
 
 	};
 
