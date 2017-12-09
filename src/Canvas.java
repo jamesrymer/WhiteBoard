@@ -6,9 +6,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.JMenu;
@@ -19,6 +22,11 @@ import javax.swing.Popup;
  * Used for displaying shapes
  */
 public class Canvas extends JPanel implements ModelListener {
+	/*
+	interface Shape extends Serializable {
+		  public void draw(java.awt.Graphics g);
+		}
+	*/
 	private ArrayList<DShape> shapes; //Holds shapes
 	private DShape selected; //Holds the selected shape
 	/*
@@ -211,6 +219,28 @@ public class Canvas extends JPanel implements ModelListener {
 	public void open() {
 		System.out.println("the open button has been pressed...");
 		//do stuff to open a desired file 
+		try
+        {
+            FileInputStream fis = new FileInputStream("myfile");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            ArrayList<DShape> tempShapes = (ArrayList) ois.readObject();
+            ois.close();
+            fis.close();
+            for(DShape aShape: tempShapes){
+                System.out.println("adding shape to shapes which calls repaint");
+                this.addShape(aShape);
+            }
+         }catch(IOException ioe){
+             ioe.printStackTrace();
+             return;
+          }catch(ClassNotFoundException c){
+             System.out.println("Class not found");
+             c.printStackTrace();
+             return;
+          }
+		//clear out the shapes array before repopulating from opened file
+		//then load temp array into the object shapes arraylist
+        
 	}
 	/*
 	 * Used for testing
