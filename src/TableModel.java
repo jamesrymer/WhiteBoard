@@ -1,11 +1,13 @@
+import java.util.ArrayList;
+
 import javax.swing.table.AbstractTableModel;
 
 public class TableModel extends AbstractTableModel implements ModelListener {
-
+	ArrayList<ArrayList<DShapeModel>> array = new ArrayList<ArrayList<DShapeModel>>();
 	@Override
 	public int getRowCount() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 6;
 	}
 
 	@Override
@@ -22,7 +24,12 @@ public class TableModel extends AbstractTableModel implements ModelListener {
 
 	@Override
 	public void ModelChanged(DShapeModel model) {
-		//fireTableRowsUpdated(rowNum,rowNum)
+		for(ArrayList<DShapeModel> arr : array) {
+			if(arr.contains(model)) {
+				this.fireTableRowsUpdated(arr.indexOf(model),arr.indexOf(model));
+			}
+		}
+		
 		
 	}
 
