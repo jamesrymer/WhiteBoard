@@ -6,8 +6,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
 import javax.swing.Icon;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
@@ -21,6 +23,8 @@ public class Canvas extends JPanel implements ModelListener {
 	private DShape selected; //Holds the selected shape
 	/*
 	 * Constructor: initializes canvas display size and adds a few mouse listeners.
+	 *
+	 *
 	 */
 	public Canvas() {
 		this.setBounds(10, 10, 200, 200);
@@ -183,16 +187,30 @@ public class Canvas extends JPanel implements ModelListener {
 
 		//If a string was returned, say so.
 		if ((s != null) && (s.length() > 0)) {
-		    System.out.println("Green eggs and... " + s + "!");
+		    System.out.println("Saving file as:  " + s);
+		    try{
+		    	
+		        FileOutputStream fos= new FileOutputStream(s);
+		        ObjectOutputStream oos= new ObjectOutputStream(fos);
+		        oos.writeObject(shapes);
+		        oos.close();
+		        fos.close();
+		        System.out.println("save completed!");
+		    }catch(IOException ioe){
+		    	System.out.println("filestream failed attempting to save...");
+		    	ioe.printStackTrace();
+		            
+		    }
 		    return;
 		}
-
 		//If you're here, the return value was null/empty.
-		System.out.println("Come on, finish the sentence!");
+		System.out.println("Cannot save without file name!");
+		
 	}
 	
 	public void open() {
 		System.out.println("the open button has been pressed...");
+		//do stuff to open a desired file 
 	}
 	/*
 	 * Used for testing
