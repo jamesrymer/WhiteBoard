@@ -1,8 +1,9 @@
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class DLine extends DShape {
+public class DLine extends DShape implements Serializable{
 	
 	public DLine(){
 		super();

@@ -211,7 +211,7 @@ public class Canvas extends JPanel implements ModelListener {
 		    }
 		    return;
 		}
-		//If you're here, the return value was null/empty.
+		//If you're here, the user input was null/empty.
 		System.out.println("Cannot save without file name!");
 		
 	}
@@ -219,28 +219,44 @@ public class Canvas extends JPanel implements ModelListener {
 	public void open() {
 		System.out.println("the open button has been pressed...");
 		//do stuff to open a desired file 
-		try
-        {
-            FileInputStream fis = new FileInputStream("myfile");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            ArrayList<DShape> tempShapes = (ArrayList) ois.readObject();
-            ois.close();
-            fis.close();
-            for(DShape aShape: tempShapes){
-                System.out.println("adding shape to shapes which calls repaint");
-                this.addShape(aShape);
-            }
-         }catch(IOException ioe){
-             ioe.printStackTrace();
-             return;
-          }catch(ClassNotFoundException c){
-             System.out.println("Class not found");
-             c.printStackTrace();
-             return;
-          }
+		Component frame = null;
+		Icon icon = null;
+		String t = (String)JOptionPane.showInputDialog(
+		                    frame,
+		                    "Enter Filename:\n",
+		                    "Customized Dialog",
+		                    JOptionPane.PLAIN_MESSAGE,
+		                    icon,
+		                    null,
+		                    "WhiteBoard");
+
+		//If a string was returned, say so.
+		if ((t != null) && (t.length() > 0)) {
+		    System.out.println("Loading file: " + t);
+			try
+	        {
+	            FileInputStream fis = new FileInputStream(t);
+	            ObjectInputStream ois = new ObjectInputStream(fis);
+	            ArrayList<DShape> tempShapes = (ArrayList) ois.readObject();
+	            ois.close();
+	            fis.close();
+	            for(DShape aShape: tempShapes){
+	                System.out.println("adding shape to shapes which calls repaint");
+	                this.addShape(aShape);
+	            }
+	         }catch(IOException ioe){
+	             ioe.printStackTrace();
+	             return;
+	         }catch(ClassNotFoundException c){
+	             System.out.println("Class not found");
+	             c.printStackTrace();
+	             return;
+	         }
+		}
+		//If you're here, the user input was null/empty.
+		System.out.println("Cannot load without file name!");
 		//clear out the shapes array before repopulating from opened file
 		//then load temp array into the object shapes arraylist
-        
 	}
 	/*
 	 * Used for testing

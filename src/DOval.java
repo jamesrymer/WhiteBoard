@@ -1,6 +1,7 @@
 import java.awt.Graphics;
+import java.io.Serializable;
 
-public class DOval extends DShape{
+public class DOval extends DShape implements Serializable{
 	
 	public DOval(){
 		super();

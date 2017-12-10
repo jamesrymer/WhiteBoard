@@ -1,8 +1,9 @@
 import java.awt.Color;
 import java.awt.Rectangle;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class DShapeModel {
+public class DShapeModel implements Serializable{
 	private ArrayList<ModelListener> listeners = new ArrayList<>();
 	private int x;
 	private int y;

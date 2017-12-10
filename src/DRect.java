@@ -1,7 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class DRect extends DShape {
+public class DRect extends DShape{
 
 	public DRect() {
 		super();
