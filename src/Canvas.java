@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.InetSocketAddress;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.JMenu;
@@ -29,6 +32,7 @@ public class Canvas extends JPanel implements ModelListener {
 	*/
 	private ArrayList<DShape> shapes; //Holds shapes
 	private DShape selected; //Holds the selected shape
+	
 	/*
 	 * Constructor: initializes canvas display size and adds a few mouse listeners.
 	 */
@@ -260,11 +264,81 @@ public class Canvas extends JPanel implements ModelListener {
 	public void serverStart() {
 		//do stuff to start that server bro
 		System.out.println("You pressed the serverStart button and invoked its method...");
+		Component frame = null;
+		Icon icon = null;
+		String port = (String)JOptionPane.showInputDialog(
+		                    frame,
+		                    "Enter port number:\n",
+		                    "Customized Dialog",
+		                    JOptionPane.PLAIN_MESSAGE,
+		                    icon,
+		                    null,
+		                    "39542");
+		System.out.println("the user has entered: " + port);
+		int portInt = Integer.parseInt(port);
+		try {
+			this.sender(portInt);
+		} catch (IOException e) {
+			System.out.println("Failed to send portInt to sender method!");
+			e.printStackTrace();
+		}	
 	}
 	
 	public void clientStart() {
-		//do stuff to start that server bro
+		//do stuff to start that client bro
 		System.out.println("You pressed the clientStart button and invoked its method...");
+		Component frame = null;
+		Icon icon = null;
+		String clientConnection = (String)JOptionPane.showInputDialog(
+		                    frame,
+		                    "Enter client connection:\n",
+		                    "Customized Dialog",
+		                    JOptionPane.PLAIN_MESSAGE,
+		                    icon,
+		                    null,
+		                    "127.0.0.1:port");
+		System.out.println("the user has entered: " + clientConnection);
+		//put program into client mode, with user input disabled (global flag)?
+		//start a client connection based on user input by calling reader
+		try {
+			this.reader(clientConnection);
+		} catch (ClassNotFoundException e) {
+			System.out.println("ClassNotFoundException:  Failed to pass clientConnection to sender()!");
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("IOException:  Failed to pass clientConnection to sender()!");
+			e.printStackTrace();
+		}
+
+	}
+	
+	private void sender(int port) throws  IOException {
+		ServerSocketChannel ssChannel = ServerSocketChannel.open();
+		ssChannel.configureBlocking(true);
+		ssChannel.socket().bind(new InetSocketAddress(port));
+		String obj ="testtext";
+		while (true) {
+			SocketChannel sChannel = ssChannel.accept();
+			ObjectOutputStream  oos = new ObjectOutputStream(sChannel.socket().getOutputStream());
+			oos.writeObject(obj);
+			oos.close();
+			System.out.println("Connection ended");
+		}
+	}
+	
+	private void reader(String hostPort) throws IOException, ClassNotFoundException {
+		System.out.println("Receiver Start");
+		String[] socketAddressParsed = hostPort.split(":", 2);
+		int portAddress = Integer.parseInt(socketAddressParsed[1]);
+		//split host:port into hostname and port number
+        SocketChannel sChannel = SocketChannel.open();
+        sChannel.configureBlocking(true);
+        if (sChannel.connect(new InetSocketAddress(socketAddressParsed[0], portAddress))) {
+            ObjectInputStream ois = new ObjectInputStream(sChannel.socket().getInputStream());
+            String s = (String)ois.readObject();
+            System.out.println("String is: '" + s + "'");
+        }
+        System.out.println("End Receiver");
 	}
 	/*
 	 * Used for testing
@@ -274,6 +348,5 @@ public class Canvas extends JPanel implements ModelListener {
 		selected.setX(selected.getX() + 50);
 		System.out.println(selected.getX());
 		//this.repaint();
-		
 	}
 }

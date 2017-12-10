@@ -130,6 +130,7 @@ public class WhiteBoard extends JFrame {
 
 			}
 		});
+		
 		//Sean's buttons for save/load and networking...
 		JButton save = new JButton("Save");
 		JButton open = new JButton("Open");
