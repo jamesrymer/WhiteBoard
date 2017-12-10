@@ -31,8 +31,6 @@ public class Canvas extends JPanel implements ModelListener {
 	private DShape selected; //Holds the selected shape
 	/*
 	 * Constructor: initializes canvas display size and adds a few mouse listeners.
-	 *
-	 *
 	 */
 	public Canvas() {
 		this.setBounds(10, 10, 200, 200);
@@ -257,6 +255,16 @@ public class Canvas extends JPanel implements ModelListener {
 		System.out.println("Cannot load without file name!");
 		//clear out the shapes array before repopulating from opened file
 		//then load temp array into the object shapes arraylist
+	}
+	
+	public void serverStart() {
+		//do stuff to start that server bro
+		System.out.println("You pressed the serverStart button and invoked its method...");
+	}
+	
+	public void clientStart() {
+		//do stuff to start that server bro
+		System.out.println("You pressed the clientStart button and invoked its method...");
 	}
 	/*
 	 * Used for testing

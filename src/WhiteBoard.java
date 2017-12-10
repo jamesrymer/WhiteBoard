@@ -130,9 +130,11 @@ public class WhiteBoard extends JFrame {
 
 			}
 		});
-		
+		//Sean's buttons for save/load and networking...
 		JButton save = new JButton("Save");
 		JButton open = new JButton("Open");
+		JButton serverStart = new JButton("$ S e r v e r  S t a r t $");
+		JButton clientStart = new JButton("$ C l i e n t  S t a r t $");
 		
 		JPanel content = new JPanel();
 		content.add(addX);
@@ -149,6 +151,10 @@ public class WhiteBoard extends JFrame {
 		//stuff for save and open
 		content.add(save);
 		content.add(open);
+		//networking stuff
+		content.add(serverStart);
+		content.add(clientStart);
+		
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				canvas.save();
@@ -160,6 +166,18 @@ public class WhiteBoard extends JFrame {
 		open.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				canvas.open();
+
+			}
+		});
+		serverStart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canvas.serverStart();
+
+			}
+		});
+		clientStart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canvas.clientStart();
 
 			}
 		});
