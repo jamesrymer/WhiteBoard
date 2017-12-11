@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -6,7 +7,17 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
+import javax.swing.Icon;
+import javax.swing.JOptionPane;
 
 import javax.swing.JPanel;
 
@@ -224,5 +235,166 @@ public class Canvas extends JPanel implements ModelListener {
 		System.out.println(selected.getX());
 		// this.repaint();
 
+	}
+        
+        	public void save() {
+		System.out.println("the save button has been pressed...");
+		//JMenu menu = new JMenu("Save As");
+		//Object[] possibilities = {null};
+		Component frame = null;
+		Icon icon = null;
+		String s = (String)JOptionPane.showInputDialog(
+		                    frame,
+		                    "Enter Filename:\n",
+		                    "Customized Dialog",
+		                    JOptionPane.PLAIN_MESSAGE,
+		                    icon,
+		                    null,
+		                    "WhiteBoard");
+
+		//If a string was returned, say so.
+		if ((s != null) && (s.length() > 0)) {
+		    System.out.println("Saving file as:  " + s);
+		    try{
+		    	
+		        FileOutputStream fos= new FileOutputStream(s);
+		        ObjectOutputStream oos= new ObjectOutputStream(fos);
+		        oos.writeObject(shapes);
+		        oos.close();
+		        fos.close();
+		        System.out.println("save completed!");
+		    }catch(IOException ioe){
+		    	System.out.println("filestream failed attempting to save...");
+		    	ioe.printStackTrace();
+		            
+		    }
+		    return;
+		}
+		//If you're here, the user input was null/empty.
+		System.out.println("Cannot save without file name!");
+		
+	}
+	
+	public void open() {
+		System.out.println("the open button has been pressed...");
+		//do stuff to open a desired file 
+		Component frame = null;
+		Icon icon = null;
+		String t = (String)JOptionPane.showInputDialog(
+		                    frame,
+		                    "Enter Filename:\n",
+		                    "Customized Dialog",
+		                    JOptionPane.PLAIN_MESSAGE,
+		                    icon,
+		                    null,
+		                    "WhiteBoard");
+
+		//If a string was returned, say so.
+		if ((t != null) && (t.length() > 0)) {
+		    System.out.println("Loading file: " + t);
+			try
+	        {
+	            FileInputStream fis = new FileInputStream(t);
+	            ObjectInputStream ois = new ObjectInputStream(fis);
+	            ArrayList<DShape> tempShapes = (ArrayList) ois.readObject();
+	            ois.close();
+	            fis.close();
+	            for(DShape aShape: tempShapes){
+	                System.out.println("adding shape to shapes which calls repaint");
+	                this.addShape(aShape);
+	            }
+	         }catch(IOException ioe){
+	             ioe.printStackTrace();
+	             return;
+	         }catch(ClassNotFoundException c){
+	             System.out.println("Class not found");
+	             c.printStackTrace();
+	             return;
+	         }
+		}
+		//If you're here, the user input was null/empty.
+		System.out.println("Cannot load without file name!");
+		//clear out the shapes array before repopulating from opened file
+		//then load temp array into the object shapes arraylist
+	}
+	
+	public void serverStart() {
+		//do stuff to start that server bro
+		System.out.println("You pressed the serverStart button and invoked its method...");
+		Component frame = null;
+		Icon icon = null;
+		String port = (String)JOptionPane.showInputDialog(
+		                    frame,
+		                    "Enter port number:\n",
+		                    "Customized Dialog",
+		                    JOptionPane.PLAIN_MESSAGE,
+		                    icon,
+		                    null,
+		                    "39542");
+		System.out.println("the user has entered: " + port);
+		int portInt = Integer.parseInt(port);
+		try {
+			this.sender(portInt);
+		} catch (IOException e) {
+			System.out.println("Failed to send portInt to sender method!");
+			e.printStackTrace();
+		}	
+	}
+	
+	public void clientStart() {
+		//do stuff to start that client bro
+		System.out.println("You pressed the clientStart button and invoked its method...");
+		Component frame = null;
+		Icon icon = null;
+		String clientConnection = (String)JOptionPane.showInputDialog(
+		                    frame,
+		                    "Enter client connection:\n",
+		                    "Customized Dialog",
+		                    JOptionPane.PLAIN_MESSAGE,
+		                    icon,
+		                    null,
+		                    "127.0.0.1:port");
+		System.out.println("the user has entered: " + clientConnection);
+		//put program into client mode, with user input disabled (global flag)?
+		//start a client connection based on user input by calling reader
+		try {
+			this.reader(clientConnection);
+		} catch (ClassNotFoundException e) {
+			System.out.println("ClassNotFoundException:  Failed to pass clientConnection to sender()!");
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("IOException:  Failed to pass clientConnection to sender()!");
+			e.printStackTrace();
+		}
+
+	}
+	
+	private void sender(int port) throws  IOException {
+		ServerSocketChannel ssChannel = ServerSocketChannel.open();
+		ssChannel.configureBlocking(true);
+		ssChannel.socket().bind(new InetSocketAddress(port));
+		String obj ="testtext";
+		while (true) {
+			SocketChannel sChannel = ssChannel.accept();
+			ObjectOutputStream  oos = new ObjectOutputStream(sChannel.socket().getOutputStream());
+			oos.writeObject(obj);
+			oos.close();
+			System.out.println("Connection ended");
+		}
+	}
+	
+	private void reader(String hostPort) throws IOException, ClassNotFoundException {
+		System.out.println("Receiver Start");
+		String[] socketAddressParsed = hostPort.split(":", 2);
+		int portAddress = Integer.parseInt(socketAddressParsed[1]);
+		//split host:port into hostname and port number
+        SocketChannel sChannel = SocketChannel.open();
+        sChannel.configureBlocking(true);
+        if (sChannel.connect(new InetSocketAddress(socketAddressParsed[0], portAddress))) {
+            ObjectInputStream ois = new ObjectInputStream(sChannel.socket().getInputStream());
+            String s = (String)ois.readObject();
+            System.out.println("String is: '" + s + "'");
+        }
+        System.out.println("End Receiver");
 	}
 }
