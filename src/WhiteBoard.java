@@ -23,7 +23,6 @@ public class WhiteBoard extends JFrame {
 
 	public WhiteBoard() {
 		canvas = new Canvas();
-
 		this.setBounds(100, 100, 800, 400);
 		FlowLayout flowLayout = new FlowLayout();
 		flowLayout.setAlignment(FlowLayout.LEFT);

@@ -317,8 +317,9 @@ public class Canvas extends JPanel implements ModelListener {
 	private void sender(int port) throws  IOException {
 		ServerSocketChannel ssChannel = ServerSocketChannel.open();
 		ssChannel.configureBlocking(true);
-		ssChannel.socket().bind(new InetSocketAddress(port));
-		String obj ="testtext";
+		int testPort = 12345;
+		ssChannel.socket().bind(new InetSocketAddress(testPort));
+		String obj ="testTextHello";
 		while (true) {
 			SocketChannel sChannel = ssChannel.accept();
 			ObjectOutputStream  oos = new ObjectOutputStream(sChannel.socket().getOutputStream());
