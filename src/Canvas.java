@@ -18,7 +18,11 @@ import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
+import javax.swing.Popup;
 import javax.swing.JPanel;
+/*
+ * Used for displaying shapes
+ */
 public class Canvas extends JPanel implements ModelListener {
 	private ArrayList<DShape> shapes; // Holds shapes
 	private DShape selected; // Holds the selected shape
@@ -89,7 +93,7 @@ public class Canvas extends JPanel implements ModelListener {
 			public void mousePressed(MouseEvent e) {
 				// point = e.getPoint();
 				draggedAtX = e.getX();
-                draggedAtY = e.getY();
+                                draggedAtY = e.getY();
 				if(selected != null) {
 					selected.setColor(Color.gray);
 				}
@@ -232,7 +236,7 @@ public class Canvas extends JPanel implements ModelListener {
 
 	}
         
-        	public void save() {
+        public void save() {
 		System.out.println("the save button has been pressed...");
 		//JMenu menu = new JMenu("Save As");
 		//Object[] possibilities = {null};
@@ -336,7 +340,7 @@ public class Canvas extends JPanel implements ModelListener {
 		}	
 	}
 	
-	public void clientStart() {
+	public void clientStart() throws IOException, ClassNotFoundException {
 		//do stuff to start that client bro
 		System.out.println("You pressed the clientStart button and invoked its method...");
 		Component frame = null;
@@ -348,48 +352,43 @@ public class Canvas extends JPanel implements ModelListener {
 		                    JOptionPane.PLAIN_MESSAGE,
 		                    icon,
 		                    null,
-		                    "127.0.0.1:port");
+                                    "39542");
 		System.out.println("the user has entered: " + clientConnection);
-		//put program into client mode, with user input disabled (global flag)?
-		//start a client connection based on user input by calling reader
-		try {
-			this.reader(clientConnection);
-		} catch (ClassNotFoundException e) {
-			System.out.println("ClassNotFoundException:  Failed to pass clientConnection to sender()!");
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("IOException:  Failed to pass clientConnection to sender()!");
-			e.printStackTrace();
-		}
-
+            //put program into client mode, with user input disabled (global flag)?
+            //start a client connection based on user input by calling reader
+            this.receiver(clientConnection);
 	}
-	
+	private void receiver(String hostPort) throws IOException, ClassNotFoundException{
+            System.out.println("Receiver Start");
+            System.out.println(hostPort + "received by receiver() method...");
+            int portAddress = Integer.parseInt(hostPort);
+            SocketChannel sChannel = SocketChannel.open();
+            sChannel.configureBlocking(true);
+            if(sChannel.connect(new InetSocketAddress("localhost", portAddress))){
+                ObjectInputStream ois = new ObjectInputStream(sChannel.socket().getInputStream());
+                ArrayList<DShape> tempShapes = (ArrayList<DShape>)ois.readObject();
+                System.out.println("ArrayList is: '" + tempShapes + "'");
+                this.shapes.clear(); //clear the client's shapes before we draw shapes received from server
+                for(DShape aShape: tempShapes){
+                    System.out.println("Adding shape to 'shapes' which calls repaint");
+                    this.addShape(aShape);
+                }
+            }
+            System.out.println("End Reciever");
+        }
 	private void sender(int port) throws  IOException {
 		ServerSocketChannel ssChannel = ServerSocketChannel.open();
 		ssChannel.configureBlocking(true);
+                int testPort = 12345;
 		ssChannel.socket().bind(new InetSocketAddress(port));
-		String obj ="testtext";
+		String obj ="textTextHello";
 		while (true) {
 			SocketChannel sChannel = ssChannel.accept();
 			ObjectOutputStream  oos = new ObjectOutputStream(sChannel.socket().getOutputStream());
+                        oos.writeObject(this.shapes);
 			oos.writeObject(obj);
 			oos.close();
 			System.out.println("Connection ended");
 		}
-	}
-	
-	private void reader(String hostPort) throws IOException, ClassNotFoundException {
-		System.out.println("Receiver Start");
-		String[] socketAddressParsed = hostPort.split(":", 2);
-		int portAddress = Integer.parseInt(socketAddressParsed[1]);
-		//split host:port into hostname and port number
-        SocketChannel sChannel = SocketChannel.open();
-        sChannel.configureBlocking(true);
-        if (sChannel.connect(new InetSocketAddress(socketAddressParsed[0], portAddress))) {
-            ObjectInputStream ois = new ObjectInputStream(sChannel.socket().getInputStream());
-            String s = (String)ois.readObject();
-            System.out.println("String is: '" + s + "'");
-        }
-        System.out.println("End Receiver");
 	}
 }
