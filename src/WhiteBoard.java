@@ -20,21 +20,15 @@ public class WhiteBoard extends JFrame {
 		WhiteBoard frame = new WhiteBoard();
 		frame.setVisible(true);
 	}
-
 	public WhiteBoard() {
 		canvas = new Canvas();
 		this.setBounds(100, 100, 800, 400);
-		FlowLayout flowLayout = new FlowLayout();
-		flowLayout.setAlignment(FlowLayout.LEFT);
-		// this.setLayout(flowLayout);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.add(canvas);
 		JButton rect = new JButton("rect");
 		rect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				Random rand = new Random();
-
 				DRectModel rectModel = new DRectModel(10,10,40,40,Color.GRAY);//rand.nextInt(400), rand.nextInt(400), rand.nextInt(400),rand.nextInt(400), Color.GRAY);
 				DRect dr = new DRect();
 				dr.shapeModel = rectModel;
@@ -133,10 +127,12 @@ public class WhiteBoard extends JFrame {
 		//Sean's buttons for save/load and networking...
 		JButton save = new JButton("Save");
 		JButton open = new JButton("Open");
-		JButton serverStart = new JButton("$ S e r v e r  S t a r t $");
-		JButton clientStart = new JButton("$ C l i e n t  S t a r t $");
+		JButton serverStart = new JButton("S e r v e r  S t a r t");
+		JButton clientStart = new JButton("C l i e n t  S t a r t");
 		
 		JPanel content = new JPanel();
+		//JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		
 		content.add(addX);
 		content.add(moveToFront);
 		content.add(moveToBack);
@@ -148,12 +144,15 @@ public class WhiteBoard extends JFrame {
 		content.add(oval);
 		// content.add(colorChooser);
 		
+		
 		//stuff for save and open
 		content.add(save);
 		content.add(open);
 		//networking stuff
 		content.add(serverStart);
 		content.add(clientStart);
+		
+		
 		
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -181,15 +180,7 @@ public class WhiteBoard extends JFrame {
 
 			}
 		});
-		
-		// content.setLayout(m);
-		this.add(content);
-		/*
-		for (JButton comp : content.getComponent(i)) {
-			((JButton)comp).setAlignmentX(this.LEFT_ALIGNMENT);
-			}
-		*/
-	
+		this.add(content); //add the buttons.  Without a layout this looks bad and conflicts with whiteboard
 
 	};
 

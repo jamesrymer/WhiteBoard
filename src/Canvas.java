@@ -155,7 +155,6 @@ public class Canvas extends JPanel implements ModelListener {
 				shapes.remove(shape);
 				this.repaint();
 			}
-			
 		}
 		
 	}
@@ -296,7 +295,7 @@ public class Canvas extends JPanel implements ModelListener {
 		                    JOptionPane.PLAIN_MESSAGE,
 		                    icon,
 		                    null,
-		                    "127.0.0.1:port");
+		                    "39542");
 		System.out.println("the user has entered: " + clientConnection);
 		//put program into client mode, with user input disabled (global flag)?
 		//start a client connection based on user input by calling reader
@@ -332,24 +331,18 @@ public class Canvas extends JPanel implements ModelListener {
 	private void receiver(String hostPort) throws IOException, ClassNotFoundException {
 		System.out.println("Receiver Start");
 		System.out.println(hostPort + " received by receiver() method...");
-		/*
-		String[] socketAddressParsed = hostPort.split(":", 2);
-		int portAddress = Integer.parseInt(socketAddressParsed[1]);
-		*/
-		//split host:port into hostname and port number
 		int portAddress = Integer.parseInt(hostPort);
         SocketChannel sChannel = SocketChannel.open();
         sChannel.configureBlocking(true);
         if (sChannel.connect(new InetSocketAddress("localhost", portAddress))) {
             ObjectInputStream ois = new ObjectInputStream(sChannel.socket().getInputStream());
-            //String s = (String)ois.readObject();
             ArrayList<DShape> tempShapes = (ArrayList<DShape>)ois.readObject();
             System.out.println("ArrayList is: '" + tempShapes + "'");
+            this.shapes.clear();//clear the client's shapes before we draw shapes received from server
             for(DShape aShape: tempShapes){
-                System.out.println("adding shape to shapes which calls repaint");
+                System.out.println("adding shape to 'shapes' which calls repaint");
                 this.addShape(aShape);
             }
-            
         }
         System.out.println("End Receiver");
 	}
