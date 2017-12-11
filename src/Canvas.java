@@ -300,8 +300,10 @@ public class Canvas extends JPanel implements ModelListener {
 		System.out.println("the user has entered: " + clientConnection);
 		//put program into client mode, with user input disabled (global flag)?
 		//start a client connection based on user input by calling reader
+		
 		try {
-			this.reader(clientConnection);
+			//this.receiver(clientConnection);
+			this.receiver("12345");
 		} catch (ClassNotFoundException e) {
 			System.out.println("ClassNotFoundException:  Failed to pass clientConnection to sender()!");
 			e.printStackTrace();
@@ -326,14 +328,17 @@ public class Canvas extends JPanel implements ModelListener {
 		}
 	}
 	
-	private void reader(String hostPort) throws IOException, ClassNotFoundException {
+	private void receiver(String hostPort) throws IOException, ClassNotFoundException {
 		System.out.println("Receiver Start");
+		System.out.println(hostPort + " received by receiver() method...");
+		/*
 		String[] socketAddressParsed = hostPort.split(":", 2);
 		int portAddress = Integer.parseInt(socketAddressParsed[1]);
+		*/
 		//split host:port into hostname and port number
         SocketChannel sChannel = SocketChannel.open();
         sChannel.configureBlocking(true);
-        if (sChannel.connect(new InetSocketAddress(socketAddressParsed[0], portAddress))) {
+        if (sChannel.connect(new InetSocketAddress("localhost", 12345))) {
             ObjectInputStream ois = new ObjectInputStream(sChannel.socket().getInputStream());
             String s = (String)ois.readObject();
             System.out.println("String is: '" + s + "'");
