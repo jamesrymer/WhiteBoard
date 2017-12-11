@@ -303,7 +303,7 @@ public class Canvas extends JPanel implements ModelListener {
 		
 		try {
 			//this.receiver(clientConnection);
-			this.receiver("12345");
+			this.receiver(clientConnection);
 		} catch (ClassNotFoundException e) {
 			System.out.println("ClassNotFoundException:  Failed to pass clientConnection to sender()!");
 			e.printStackTrace();
