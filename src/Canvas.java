@@ -1,38 +1,8 @@
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.net.InetSocketAddress;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import javax.swing.Icon;
-import javax.swing.JMenu;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.Popup;
-/*
- * Used for displaying shapes
- */
 public class Canvas extends JPanel implements ModelListener {
-	/*
-	interface Shape extends Serializable {
-		  public void draw(java.awt.Graphics g);
-		}
-	*/
-	private ArrayList<DShape> shapes; //Holds shapes
-	private DShape selected; //Holds the selected shape
-	
+	private ArrayList<DShape> shapes; // Holds shapes
+	private DShape selected; // Holds the selected shape
+	private volatile int draggedAtX, draggedAtY;
+
 	/*
 	 * Constructor: initializes canvas display size and adds a few mouse listeners.
 	 */
@@ -46,9 +16,45 @@ public class Canvas extends JPanel implements ModelListener {
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
-				moveSelected(e.getX(), e.getY());
+				Point moving;
+				Point anchor;
+				int knob = -1;
+				
+					if(selected instanceof DLine) {
+						
+					}
+					else {
+					
+					for(Rectangle rectangle : selected.getKnobs()) {
+						if(rectangle.contains(e.getPoint())) {
+							knob = selected.getKnobs().indexOf(rectangle);
+						}
+					}
+					
+					if(knob == 3) //Bottom Right
+					{
+						anchor = selected.getKnobs().get(0).getLocation();
+						selected.setWidth(selected.getWidth() + e.getX() - draggedAtX);
+						selected.setHeight(selected.getHeight() +  e.getY() - draggedAtY);
+						
+					}
+					
+					else if (e.getX() >= selected.getX() && e.getX() <= selected.getX() + selected.getWidth() && e.getY() >= selected.getY()
+							&& e.getY() <= selected.getY() + selected.getHeight()) {
+						moveSelected(e.getX() - draggedAtX + selected.getX(),
+		                        e.getY() - draggedAtY + selected.getY());
+
+					}
+					
+					
+					}
+					//System.out.println(e.getX());
+				
+				
 			}
+
+			
+
 			@Override
 			public void mouseMoved(MouseEvent e) {
 				// TODO Auto-generated method stub
@@ -61,6 +67,8 @@ public class Canvas extends JPanel implements ModelListener {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				// point = e.getPoint();
+				draggedAtX = e.getX();
+                draggedAtY = e.getY();
 				if(selected != null) {
 					selected.setColor(Color.gray);
 				}
@@ -78,10 +86,15 @@ public class Canvas extends JPanel implements ModelListener {
 		this.addMouseListener(mouseAdapter);
 		
 	}
-	
-	public void moveSelected(int x, int y) { //Will be used to move shape.
-		
+
+	public void moveSelected(int x, int y) { // Will be used to move shape.
+		selected.setX(x - selected.getX());
+		selected.setY(y - selected.getY());
+		this.repaint();
+		System.out.println(selected.getX() + " " + x + "::::::" + selected.getY() + "  " + y);
+
 	}
+
 	/*
 	 * Adds a shape to the list then calls repaint to display it on the canvas.
 	 */
@@ -90,8 +103,10 @@ public class Canvas extends JPanel implements ModelListener {
 		this.shapes.add(shape);
 		this.repaint();
 	}
+
 	/*
-	 * Tells shapes to draw themselves. If shape is selected, draws knobs on each corner which will be used for resizing.
+	 * Tells shapes to draw themselves. If shape is selected, draws knobs on each
+	 * corner which will be used for resizing.
 	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -106,12 +121,14 @@ public class Canvas extends JPanel implements ModelListener {
 			}
 		}
 	}
+
 	/*
 	 * Sets selected shape;
 	 */
 	public void setSelected(DShape shape) {
 		this.selected = shape;
 	}
+
 	/*
 	 * Sets selected shape;
 	 */
@@ -125,9 +142,9 @@ public class Canvas extends JPanel implements ModelListener {
 			System.out.println(selected.getX());
 		}
 		selected.setColor(Color.MAGENTA);
-		
-		
+
 	}
+
 	/*
 	 * Returns selected shape;
 	 */
@@ -136,50 +153,65 @@ public class Canvas extends JPanel implements ModelListener {
 	}
 
 	/*
-	 * Its complicated... 
+	 * Its complicated...
 	 */
 	@Override
 	public void ModelChanged(DShapeModel model) {
 		// TODO Auto-generated method stub
 		selected.shapeModel = model;
 		this.repaint();
-		
+
 	}
-	
+
 	/*
 	 * Deletes selected shape;
 	 */
 	public void delete() {
 		for (DShape shape : shapes) {
-			if(shape == selected) {
+			if (shape == selected) {
 				shapes.remove(shape);
 				this.repaint();
 			}
+
 		}
-		
+
 	}
+
 	/*
-	 * Sets selected shape to the front most position (The last element of the array);
+	 * Sets selected shape to the front most position (The last element of the
+	 * array);
 	 */
 	public void MoveToFront() {
 		shapes.add(selected);
 		shapes.remove(selected);
 		this.repaint();
-		
+
 	}
+
 	/*
-	 * Sets selected shape to the back most position (The first element of the array);
+	 * Sets selected shape to the back most position (The first element of the
+	 * array);
 	 */
 	public void MoveToBack() {
 		shapes.remove(selected);
 		shapes.add(0, selected);
-		
+
 		this.repaint();
-		
+
 	}
-	//SAVING AND LOADING FEATURE METHODS
-	//button for saving
-	public void save() {
+
+	/*
+	 * Used for testing
+	 */
+	public void addX() {
+		System.out.println(selected.getX());
+		selected.setX(selected.getX() + 50);
+		System.out.println(selected.getX());
+		// this.repaint();
+
+	}
+        
+        	public void save() {
 		System.out.println("the save button has been pressed...");
 		//JMenu menu = new JMenu("Save As");
 		//Object[] possibilities = {null};
@@ -295,14 +327,12 @@ public class Canvas extends JPanel implements ModelListener {
 		                    JOptionPane.PLAIN_MESSAGE,
 		                    icon,
 		                    null,
-		                    "39542");
+		                    "127.0.0.1:port");
 		System.out.println("the user has entered: " + clientConnection);
 		//put program into client mode, with user input disabled (global flag)?
 		//start a client connection based on user input by calling reader
-		
 		try {
-			//this.receiver(clientConnection);
-			this.receiver(clientConnection);
+			this.reader(clientConnection);
 		} catch (ClassNotFoundException e) {
 			System.out.println("ClassNotFoundException:  Failed to pass clientConnection to sender()!");
 			e.printStackTrace();
@@ -316,43 +346,29 @@ public class Canvas extends JPanel implements ModelListener {
 	private void sender(int port) throws  IOException {
 		ServerSocketChannel ssChannel = ServerSocketChannel.open();
 		ssChannel.configureBlocking(true);
-		//int testPort = 12345;
 		ssChannel.socket().bind(new InetSocketAddress(port));
-		//String obj ="testTextHello";  //test String to send over socket to prove it works
+		String obj ="testtext";
 		while (true) {
 			SocketChannel sChannel = ssChannel.accept();
 			ObjectOutputStream  oos = new ObjectOutputStream(sChannel.socket().getOutputStream());
-			oos.writeObject(this.shapes); //pass ArrayList containing shapes over the socket to draw on client side
+			oos.writeObject(obj);
 			oos.close();
 			System.out.println("Connection ended");
 		}
 	}
 	
-	private void receiver(String hostPort) throws IOException, ClassNotFoundException {
+	private void reader(String hostPort) throws IOException, ClassNotFoundException {
 		System.out.println("Receiver Start");
-		System.out.println(hostPort + " received by receiver() method...");
-		int portAddress = Integer.parseInt(hostPort);
+		String[] socketAddressParsed = hostPort.split(":", 2);
+		int portAddress = Integer.parseInt(socketAddressParsed[1]);
+		//split host:port into hostname and port number
         SocketChannel sChannel = SocketChannel.open();
         sChannel.configureBlocking(true);
-        if (sChannel.connect(new InetSocketAddress("localhost", portAddress))) {
+        if (sChannel.connect(new InetSocketAddress(socketAddressParsed[0], portAddress))) {
             ObjectInputStream ois = new ObjectInputStream(sChannel.socket().getInputStream());
-            ArrayList<DShape> tempShapes = (ArrayList<DShape>)ois.readObject();
-            System.out.println("ArrayList is: '" + tempShapes + "'");
-            this.shapes.clear();//clear the client's shapes before we draw shapes received from server
-            for(DShape aShape: tempShapes){
-                System.out.println("adding shape to 'shapes' which calls repaint");
-                this.addShape(aShape);
-            }
+            String s = (String)ois.readObject();
+            System.out.println("String is: '" + s + "'");
         }
         System.out.println("End Receiver");
-	}
-	/*
-	 * Used for testing
-	 */
-	public void addX() {
-		System.out.println(selected.getX());
-		selected.setX(selected.getX() + 50);
-		System.out.println(selected.getX());
-		//this.repaint();
 	}
 }
