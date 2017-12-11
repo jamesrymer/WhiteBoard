@@ -319,11 +319,11 @@ public class Canvas extends JPanel implements ModelListener {
 		ssChannel.configureBlocking(true);
 		//int testPort = 12345;
 		ssChannel.socket().bind(new InetSocketAddress(port));
-		String obj ="testTextHello";
+		//String obj ="testTextHello";  //test String to send over socket to prove it works
 		while (true) {
 			SocketChannel sChannel = ssChannel.accept();
 			ObjectOutputStream  oos = new ObjectOutputStream(sChannel.socket().getOutputStream());
-			oos.writeObject(obj);
+			oos.writeObject(this.shapes); //pass ArrayList containing shapes over the socket to draw on client side
 			oos.close();
 			System.out.println("Connection ended");
 		}
@@ -342,8 +342,14 @@ public class Canvas extends JPanel implements ModelListener {
         sChannel.configureBlocking(true);
         if (sChannel.connect(new InetSocketAddress("localhost", portAddress))) {
             ObjectInputStream ois = new ObjectInputStream(sChannel.socket().getInputStream());
-            String s = (String)ois.readObject();
-            System.out.println("String is: '" + s + "'");
+            //String s = (String)ois.readObject();
+            ArrayList<DShape> tempShapes = (ArrayList<DShape>)ois.readObject();
+            System.out.println("ArrayList is: '" + tempShapes + "'");
+            for(DShape aShape: tempShapes){
+                System.out.println("adding shape to shapes which calls repaint");
+                this.addShape(aShape);
+            }
+            
         }
         System.out.println("End Receiver");
 	}
