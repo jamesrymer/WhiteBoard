@@ -1,34 +1,30 @@
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Random;
-
 import javax.swing.JButton;
-import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class WhiteBoard extends JFrame {
-
 	Canvas canvas;
-
 	public static void main(String[] args) {
 		WhiteBoard frame = new WhiteBoard();
 		frame.setVisible(true);
 	}
 	public WhiteBoard() {
+                super("WhiteBoard Application");
 		canvas = new Canvas();
-		this.setBounds(100, 100, 800, 400);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.add(canvas);
-		JButton rect = new JButton("rect");
+                this.setLayout(new GridLayout(1,2,10,3));
+		this.setBounds(500, 500, 1000, 400);
+		this.add(canvas).setLocation(300,80);
+		JButton rect = new JButton("Rect");
 		rect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
 				Random rand = new Random();
+
 				DRectModel rectModel = new DRectModel(10,10,40,40,Color.GRAY);//rand.nextInt(400), rand.nextInt(400), rand.nextInt(400),rand.nextInt(400), Color.GRAY);
 				DRect dr = new DRect();
 				dr.shapeModel = rectModel;
@@ -37,8 +33,7 @@ public class WhiteBoard extends JFrame {
 				canvas.addShape(dr);
 			}
 		});
-		
-		JButton oval = new JButton("oval");
+		JButton oval = new JButton("Oval");
 		oval.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Random rand = new Random();
@@ -52,14 +47,13 @@ public class WhiteBoard extends JFrame {
 
 			}
 		});
-		
 		JButton line = new JButton("Line");
 		line.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				Random rand = new Random();
 
-				DLineModel rectModel = new DLineModel(10,10,100,100,Color.GRAY);//rand.nextInt(400), rand.nextInt(400), rand.nextInt(400),rand.nextInt(400), Color.GRAY);
+				DLineModel rectModel = new DLineModel(10,0,200,200,Color.GRAY);//rand.nextInt(400), rand.nextInt(400), rand.nextInt(400),rand.nextInt(400), Color.GRAY);
 				DLine dl = new DLine();
 				dl.shapeModel = rectModel;
 //				 dr.setAll(rectModel.getX(), rectModel.getY(), rectModel.getWidth(),
@@ -67,18 +61,13 @@ public class WhiteBoard extends JFrame {
 				canvas.addShape(dl);
 			}
 		});
-		
-		
-
-		JButton text = new JButton("text");
+		JButton text = new JButton("Text");
 
 		text.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-
 			}
 		});
-
 		// JButton colorChooser = new JButton("ChangeColor");
 		// line.addActionListener(new ActionListener() {
 		// public void actionPerformed(ActionEvent e) {
@@ -87,63 +76,48 @@ public class WhiteBoard extends JFrame {
 		// Color.GRAY));
 		// }
 		// });
-		
-		JButton delete = new JButton("delete");
-		
+		JButton delete = new JButton("Delete Item");
 		delete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				canvas.delete();
 
 			}
 		});
-		
 		JButton moveToFront = new JButton("Move To Front");
-		
 		moveToFront.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				canvas.MoveToFront();
-
 			}
 		});
-		
 		JButton moveToBack = new JButton("Move To Back");
-		
 		moveToBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				canvas.MoveToBack();
-
 			}
 		});
-		
-		JButton addX = new JButton("addX");
-		
+		JButton addX = new JButton("Shift-X");
 		addX.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				canvas.addX();
-
 			}
 		});
-		
 		//Sean's buttons for save/load and networking...
 		JButton save = new JButton("Save");
 		JButton open = new JButton("Open");
-		JButton serverStart = new JButton("S e r v e r  S t a r t");
-		JButton clientStart = new JButton("C l i e n t  S t a r t");
+		JButton serverStart = new JButton("$ S e r v e r  S t a r t $");
+		JButton clientStart = new JButton("$ C l i e n t  S t a r t $");
 		
 		JPanel content = new JPanel();
-		//JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		
+                content.add(rect);
+                content.add(line);
+                content.add(oval);
 		content.add(addX);
+                content.add(text);
+                content.add(delete);
 		content.add(moveToFront);
 		content.add(moveToBack);
-		content.add(delete);
-		content.add(line);
-		content.add(text);
-		content.add(rect);
 		// this.add(rect);
-		content.add(oval);
 		// content.add(colorChooser);
-		
 		
 		//stuff for save and open
 		content.add(save);
@@ -151,8 +125,7 @@ public class WhiteBoard extends JFrame {
 		//networking stuff
 		content.add(serverStart);
 		content.add(clientStart);
-		
-		
+                
 		
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
