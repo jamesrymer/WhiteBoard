@@ -1,3 +1,25 @@
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
+
+import javax.swing.Icon;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 public class Canvas extends JPanel implements ModelListener {
 	private ArrayList<DShape> shapes; // Holds shapes
 	private DShape selected; // Holds the selected shape
@@ -21,7 +43,30 @@ public class Canvas extends JPanel implements ModelListener {
 				int knob = -1;
 				
 					if(selected instanceof DLine) {
+						for(Rectangle r : selected.getKnobs())
+						{
+							if(r.contains(e.getPoint()))
+							{
+								knob = selected.getKnobs().indexOf(r);
+							}
+						}
 						
+						if(knob == 0)
+						{
+							anchor = selected.getKnobs().get(1).getLocation();
+							selected.setX(selected.getX() + e.getX() - draggedAtX);
+							selected.setY(selected.getY() +e.getY() - draggedAtY);
+							selected.setWidth(selected.getWidth() - e.getX() - draggedAtX);
+							selected.setHeight(selected.getHeight() -  e.getY() - draggedAtY);
+							//pt = e.getPoint();
+						}
+						else if(knob == 1)
+						{
+							anchor = selected.getKnobs().get(0).getLocation();
+							selected.setWidth(selected.getWidth() + e.getX() - draggedAtX);
+							selected.setHeight(selected.getHeight() +  e.getY() - draggedAtY);
+							//pt = e.getPoint();
+						}
 					}
 					else {
 					
@@ -38,8 +83,8 @@ public class Canvas extends JPanel implements ModelListener {
 						selected.setHeight(selected.getHeight() +  e.getY() - draggedAtY);
 						
 					}
-					
-					else if (e.getX() >= selected.getX() && e.getX() <= selected.getX() + selected.getWidth() && e.getY() >= selected.getY()
+					}
+					 if (e.getX() >= selected.getX() && e.getX() <= selected.getX() + selected.getWidth() && e.getY() >= selected.getY()
 							&& e.getY() <= selected.getY() + selected.getHeight()) {
 						moveSelected(e.getX() - draggedAtX + selected.getX(),
 		                        e.getY() - draggedAtY + selected.getY());
@@ -47,7 +92,7 @@ public class Canvas extends JPanel implements ModelListener {
 					}
 					
 					
-					}
+					
 					//System.out.println(e.getX());
 				
 				
