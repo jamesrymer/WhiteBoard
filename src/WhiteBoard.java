@@ -142,7 +142,7 @@ public class WhiteBoard extends JFrame {
 		});
 		
 		JPanel content = new JPanel();
-		content.add(addX);
+		//content.add(addX);
 		content.add(moveToFront);
 		content.add(moveToBack);
 		content.add(delete);
