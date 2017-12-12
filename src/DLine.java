@@ -1,19 +1,21 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package whiteboard;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-
 public class DLine extends DShape {
-	
 	public DLine(){
 		super();
 	}
-	
 public void draw(Graphics g) {
-        
         g.setColor(shapeModel.getColor());
         g.drawLine(getX(), getY(), getWidth(), getHeight());
     }
-
 public ArrayList<Rectangle> getKnobs() {
 	ArrayList<Rectangle> knobs = new ArrayList<Rectangle>();
 	knobs.add(new Rectangle(getX()-9,getY()-9,20,20)); //Top Left

@@ -1,27 +1,30 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package whiteboard;
 import java.awt.Color;
 import java.awt.Rectangle;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class DShapeModel {
+public class DShapeModel implements Serializable{
 	private ArrayList<ModelListener> listeners = new ArrayList<>();
 	private int x;
 	private int y;
 	private int width;
 	private int height;
-	private Color color;
+	protected Color color;
 	private Rectangle rectangle;
 	
 	public Rectangle getRectangle() {
 		return rectangle;
 	}
-
-
 	public void setRectangle(Rectangle rectangle) {
 		this.rectangle = rectangle;
 		changedModel();
 	}
-
-
 	public DShapeModel(int x, int y, int width, int height, Color color) {
 		super();
 		this.x = x;
@@ -77,7 +80,5 @@ public class DShapeModel {
 		for (ModelListener listener : listeners) {
 			listener.ModelChanged(this);
 		}
-		
 	}
-	
 }

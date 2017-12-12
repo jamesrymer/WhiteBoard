@@ -1,20 +1,22 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package whiteboard;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-
 public class DShape implements ModelListener {
 	DShapeModel shapeModel;
-	
 	public DShape() {
 		shapeModel = new DShapeModel(0, 0, 0, 0, Color.gray);
 	}
-	
 	public void draw(Graphics g) {
 		g.setColor(shapeModel.getColor());
 		g.drawRect(shapeModel.getX(), shapeModel.getY(), shapeModel.getWidth(), shapeModel.getHeight());
 	}
-	
 	public void setColor(Color color) {
 		shapeModel.setColor(color);
 	}
@@ -56,7 +58,6 @@ public class DShape implements ModelListener {
 		knobs.add(new Rectangle(getX()+getWidth()-9,getY()+getHeight()-9,20,20)); //Bottom Right
 		return knobs;
 	}
-
 	@Override
 	public void ModelChanged(DShapeModel model) {
 		this.shapeModel = model;
