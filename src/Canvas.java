@@ -45,32 +45,48 @@ public class Canvas extends JPanel implements ModelListener {
 				int knob = -1;
 				
 					if(selected instanceof DLine) {
-						
+                                            for(Rectangle r: selected.getKnobs())
+                                            {
+                                                if(r.contains(e.getPoint())){
+                                                    knob = selected.getKnobs().indexOf(r);
+                                                }
+                                            }
 					}
-					else {
-					
-					for(Rectangle rectangle : selected.getKnobs()) {
-						if(rectangle.contains(e.getPoint())) {
-							knob = selected.getKnobs().indexOf(rectangle);
-						}
-					}
-					
-					if(knob == 3) //Bottom Right
-					{
-						anchor = selected.getKnobs().get(0).getLocation();
-						selected.setWidth(selected.getWidth() + e.getX() - draggedAtX);
-						selected.setHeight(selected.getHeight() +  e.getY() - draggedAtY);
-						
-					}
-					
-					else if (e.getX() >= selected.getX() && e.getX() <= selected.getX() + selected.getWidth() && e.getY() >= selected.getY()
-							&& e.getY() <= selected.getY() + selected.getHeight()) {
-						moveSelected(e.getX() - draggedAtX + selected.getX(),
-		                        e.getY() - draggedAtY + selected.getY());
-
-					}
-					}
-					//System.out.println(e.getX());
+                            switch (knob) {
+                                case 0:
+                                    anchor = selected.getKnobs().get(1).getLocation();
+                                    selected.setX(selected.getX() + e.getX() - draggedAtX);
+                                    selected.setY(selected.getY() +e.getY() - draggedAtY);
+                                    selected.setWidth(selected.getWidth() - e.getX() - draggedAtX); 
+                                    selected.setHeight(selected.getHeight() -  e.getY() - draggedAtY);
+                                    break;
+                            //System.out.println(e.getX());
+                                case 1:
+                                    anchor = selected.getKnobs().get(0).getLocation();
+                                    selected.setWidth(selected.getWidth() + e.getX() - draggedAtX);
+                                    selected.setHeight(selected.getHeight() +  e.getY() - draggedAtY);
+                                    break;
+                                default:
+                                    for(Rectangle rectangle : selected.getKnobs()) {
+                                        if(rectangle.contains(e.getPoint())) {
+                                            knob = selected.getKnobs().indexOf(rectangle);
+                                        }
+                                    }
+                                    if(knob == 3) //Bottom Right
+                                    {
+                                        anchor = selected.getKnobs().get(0).getLocation();
+                                        selected.setWidth(selected.getWidth() + e.getX() - draggedAtX);
+                                        selected.setHeight(selected.getHeight() +  e.getY() - draggedAtY);
+                                        
+                                    }
+                                    if (e.getX() >= selected.getX() && e.getX() <= selected.getX() + selected.getWidth() && e.getY() >= selected.getY()
+                                            && e.getY() <= selected.getY() + selected.getHeight()) {
+                                        moveSelected(e.getX() - draggedAtX + selected.getX(),
+                                                e.getY() - draggedAtY + selected.getY());
+                                        
+                                    }
+                                    break;
+                            }
 			}
 			@Override
 			public void mouseMoved(MouseEvent e) {
